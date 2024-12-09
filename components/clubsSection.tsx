@@ -20,7 +20,16 @@ interface Club {
   vipList: boolean;
   photo?: string;
   imageUrl?: string;
+  description: string;
+  musicalStyle: string;
+  averagePrice: string;
+  persona: string;
+  rating: string;
+  workingTime: Record<string, string>;
+  vipListInfo: Record<string, string>;
+  instagram: string;
   freeEntry?: boolean;
+  userRatingTotal?: string;
   vipListBenefits?: {
     friday?: string;
     saturday?: string;
@@ -43,31 +52,27 @@ interface BlogPost {
   description: string;
   author: string;
   image: string | StaticImageData;
-  link?: string;
   details: {
     musicalStyle: string;
     averagePrice: string;
     persona: string;
     rating: string;
-    workingTime: {
-      [key: string]: string;
-    };
-    vipListInfo: {
-      [key: string]: string;
-    };
+    workingTime: Record<string, string>;
+    vipListInfo: Record<string, string>;
     instagram: string;
-    freeEntry: boolean;
-    vipListBenefits: {
+    freeEntry?: boolean;
+    userRatingTotal?: string;
+    vipListBenefits?: {
       friday?: string;
       saturday?: string;
       sunday?: string;
     };
-    vipListLink: {
+    vipListLink?: {
       friday?: string;
       saturday?: string;
       sunday?: string;
     };
-    singers: {
+    singers?: {
       friday?: string;
       // outros dias conforme necessário
     };
@@ -125,18 +130,19 @@ export default function ClubsSection() {
         const formattedData: BlogPost[] = data.map((club) => ({
           tag: "Clube",
           title: club.name,
-          description: `Local: ${club.address || "Endereço não informado"}`,
+          description: club.description || "Sem descrição disponível",
           author: club.address || "Local a confirmar",
           image: club.photo || club.imageUrl || placeholderClub,
           details: {
-            musicalStyle: "",
-            averagePrice: "",
-            persona: "",
-            rating: "",
-            workingTime: {},
-            vipListInfo: {},
-            instagram: "",
+            musicalStyle: club.musicalStyle || "",
+            averagePrice: club.averagePrice || "",
+            persona: club.persona || "",
+            rating: club.rating || "",
+            workingTime: club.workingTime || {},
+            vipListInfo: club.vipListInfo || {},
+            instagram: club.instagram || "",
             freeEntry: club.freeEntry,
+            userRatingTotal: club.userRatingTotal,
             vipListBenefits: club.vipListBenefits,
             vipListLink: club.vipListLink,
             singers: club.singers
@@ -300,68 +306,51 @@ export default function ClubsSection() {
                 />
               </div>
 
-              <div className="grid gap-6">
+              <div className="grid gap-4">
                 <div>
-                  <h3 className="font-semibold text-purple-300 mb-2">Sobre</h3>
+                  <h3 className="font-semibold text-purple-300">Sobre</h3>
                   <p className="text-gray-300">{selectedClub.description}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <h3 className="font-semibold text-purple-300 mb-2">Detalhes</h3>
+                    <h3 className="font-semibold text-purple-300">Detalhes</h3>
                     <ul className="space-y-2 text-gray-300">
                       <li>🎵 Estilo: {selectedClub.details.musicalStyle}</li>
                       <li>💰 Preço médio: {selectedClub.details.averagePrice}</li>
                       <li>👥 Público: {selectedClub.details.persona}</li>
-                      <li>📍 Bairro: {selectedClub.author}</li>
                       <li>⭐ Avaliação: {selectedClub.details.rating}</li>
-                      {selectedClub.details.freeEntry && (
-                        <li>🎟️ Entrada: Gratuita</li>
-                      )}
                     </ul>
                   </div>
 
-                  {selectedClub.details.singers && Object.keys(selectedClub.details.singers).length > 0 && (
-                    <div>
-                      <h3 className="font-semibold text-purple-300 mb-2">Atrações</h3>
-                      <ul className="space-y-2 text-gray-300">
-                        {Object.entries(selectedClub.details.singers).map(([day, singer]) => (
+                  <div>
+                    <h3 className="font-semibold text-purple-300">Horários</h3>
+                    <ul className="space-y-2 text-gray-300">
+                      {selectedClub.details.workingTime && 
+                        Object.entries(selectedClub.details.workingTime).map(([day, time]) => (
                           <li key={day}>
-                            {day}: {singer}
+                            {day}: {time}
                           </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                        ))
+                      }
+                    </ul>
+                  </div>
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-purple-300 mb-2">Horários</h3>
+                  <h3 className="font-semibold text-purple-300">Lista VIP</h3>
                   <ul className="space-y-2 text-gray-300">
-                    {selectedClub.details.workingTime && 
-                      Object.entries(selectedClub.details.workingTime).map(([day, time]) => (
+                    {selectedClub.details.vipListInfo && 
+                      Object.entries(selectedClub.details.vipListInfo).map(([day, info]) => (
                         <li key={day}>
-                          {day}: {time}
+                          {day}: {info}
                         </li>
                       ))
                     }
                   </ul>
                 </div>
 
-                {selectedClub.details.vipListBenefits && (
-                  <div>
-                    <h3 className="font-semibold text-purple-300 mb-2">Benefícios Lista VIP</h3>
-                    <ul className="space-y-2 text-gray-300">
-                      {Object.entries(selectedClub.details.vipListBenefits).map(([day, benefit]) => (
-                        <li key={day}>
-                          {day}: {benefit}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                <div className="flex justify-center gap-4 pt-4">
+                <div className="flex justify-center pt-4">
                   {selectedClub.details.instagram && (
                     <a
                       href={selectedClub.details.instagram}
@@ -370,16 +359,6 @@ export default function ClubsSection() {
                       className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
                     >
                       Seguir no Instagram
-                    </a>
-                  )}
-                  {selectedClub.details.vipListLink && Object.values(selectedClub.details.vipListLink)[0] && (
-                    <a
-                      href={Object.values(selectedClub.details.vipListLink)[0]}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
-                    >
-                      Lista VIP
                     </a>
                   )}
                 </div>
