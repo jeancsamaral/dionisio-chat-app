@@ -1,0 +1,423 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  :root {
+    --background: 210 10% 95%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 210 10% 96.5%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+    --chart-1: 210 100% 25%;
+    --chart-2: 175 60% 75%;
+    --chart-3: 42 75% 66%;
+    --chart-4: 211 55% 40%;
+    --chart-5: 207 56% 71%;
+  }
+
+  .dark {
+    --background: 250.2 82% 8%;
+    --foreground: 210 40% 98%;
+    --card: 236 18% 15%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 200.2 91.2% 70.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@keyframes spotlight {
+  0% {
+      background-position: 0% 0%;
+  }
+  25% {
+      background-position: 100% 0%;
+  }
+  50% {
+      background-position: 100% 100%;
+  }
+  75% {
+      background-position: 0% 100%;
+  }
+  100% {
+      background-position: 0% 0%;
+  }
+}
+
+.spotlight-animation {
+  animation: spotlight 30s linear infinite;
+}
+
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 1em 0;
+}
+
+.w-md-editor-fullscreen {
+  overflow-y: auto !important;
+}
+
+.w-md-editor-fullscreen .w-md-editor-content {
+  height: calc(100vh - 50px) !important;
+  overflow-y: auto !important;
+}
+
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(6, 182, 212, 0.3) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(6, 182, 212, 0.3);
+    border-radius: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(6, 182, 212, 0.5);
+}
+
+/* Estilos personalizados para o editor MD */
+.wmde-markdown-var {
+  background-color: rgba(30, 58, 138, 0.3) !important;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+.wmde-markdown-var .w-md-editor-text-pre > code,
+.wmde-markdown-var .w-md-editor-text-input {
+  color: #93c5fd !important;
+}
+
+.wmde-markdown-var .w-md-editor-text {
+  background-color: rgba(30, 58, 138, 0.3) !important;
+}
+
+.wmde-markdown-var .w-md-editor-preview {
+  background-color: rgba(30, 58, 138, 0.3) !important;
+  box-shadow: inset 1px 0 0 0 rgba(59, 130, 246, 0.5) !important;
+}
+
+.wmde-markdown-var .wmde-markdown-color {
+  background-color: transparent !important;
+  color: #93c5fd !important;
+}
+
+.wmde-markdown-var .w-md-editor-toolbar {
+  background-color: rgba(30, 58, 138, 0.5) !important;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+.wmde-markdown-var .w-md-editor-toolbar button {
+  color: #93c5fd !important;
+}
+
+.wmde-markdown-var .w-md-editor-toolbar button:hover {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Mantém a funcionalidade de fullscreen */
+.w-md-editor-fullscreen {
+  background-color: #0F172A !important;
+}
+
+/* Estilo da barra de rolagem */
+.w-md-editor-text-pre::-webkit-scrollbar,
+.w-md-editor-preview::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.w-md-editor-text-pre::-webkit-scrollbar-track,
+.w-md-editor-preview::-webkit-scrollbar-track {
+  background: rgba(30, 58, 138, 0.1);
+  border-radius: 4px;
+}
+
+.w-md-editor-text-pre::-webkit-scrollbar-thumb,
+.w-md-editor-preview::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.w-md-editor-text-pre::-webkit-scrollbar-thumb:hover,
+.w-md-editor-preview::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.8);
+}
+
+/* Mantém a divisão entre editor e preview */
+.w-md-editor-show-preview .w-md-editor-preview {
+  border-left: 1px solid rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Ajusta o estilo do modo fullscreen */
+.w-md-editor-fullscreen .w-md-editor-toolbar {
+  background-color: #1E3A8A !important;
+}
+
+.w-md-editor-fullscreen .w-md-editor-content {
+  background-color: #0F172A !important;
+}
+
+/* Animação para as estrelas */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+.animate-twinkle {
+  animation: twinkle linear infinite;
+}
+
+.w-md-editor-text-pre > code,
+.w-md-editor-text-input {
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace !important;
+}
+
+.w-md-editor-preview strong {
+  font-weight: 700 !important;
+}
+
+.wmde-markdown strong {
+  font-weight: 700 !important;
+}
+
+/* Estilos para o renderizador HTML */
+.prose-custom {
+  color: #93c5fd !important;
+  font-size: 1rem;
+  line-height: 1.75;
+  font-family: 'Poppins', sans-serif;
+}
+
+.prose-custom h1,
+.prose-custom h2,
+.prose-custom h3,
+.prose-custom h4 {
+  color: #60A5FA;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.prose-custom h1 {
+  font-size: 2em;
+}
+
+.prose-custom h2 {
+  font-size: 1.75em;
+}
+
+.prose-custom h3 {
+  font-size: 1.5em;
+}
+
+.prose-custom p {
+  margin: 1em 0;
+  color: #93c5fd;
+}
+
+.prose-custom ul,
+.prose-custom ol {
+  margin: 1em 0;
+  padding-left: 1.5em;
+  color: #93c5fd;
+}
+
+.prose-custom li {
+  margin: 0.25em 0;
+}
+
+.prose-custom code {
+  background-color: rgba(30, 58, 138, 0.3);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  color: #93c5fd;
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+}
+
+.prose-custom pre {
+  background-color: rgba(30, 58, 138, 0.3);
+  padding: 1em;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.prose-custom pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: #93c5fd;
+}
+
+.prose-custom img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1em 0;
+}
+
+.prose-custom strong {
+  color: #60A5FA;
+  font-weight: 600;
+}
+
+.prose-custom em {
+  font-style: italic;
+  color: #93c5fd;
+}
+
+.prose-custom a {
+  color: #60A5FA;
+  text-decoration: underline;
+  text-decoration-thickness: 0.1em;
+  text-underline-offset: 0.2em;
+  transition: color 0.2s ease;
+}
+
+.prose-custom a:hover {
+  color: #93c5fd;
+}
+
+.prose-custom blockquote {
+  border-left: 4px solid rgba(59, 130, 246, 0.5);
+  padding-left: 1em;
+  margin: 1em 0;
+  font-style: italic;
+  color: #93c5fd;
+  background-color: rgba(30, 58, 138, 0.2);
+  padding: 0.5em 1em;
+  border-radius: 0.25rem;
+}
+
+/* Ajustes para fórmulas matemáticas */
+.prose-custom .katex {
+  color: #93c5fd;
+  font-size: 1.1em;
+}
+
+.prose-custom .katex-display {
+  margin: 1em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5em 0;
+}
+
+/* Ajustes para listas */
+.prose-custom ul li::before {
+  content: "•";
+  color: #60A5FA;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+.prose-custom ol {
+  list-style-type: decimal;
+  color: #93c5fd;
+}
+
+.prose-custom ol li::marker {
+  color: #60A5FA;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* Adicione isso junto com seus outros estilos */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+  }
+}
+
+.cosmic-tab-active {
+  animation: glow 2s infinite;
+}
+
+.drop-shadow-glow {
+  filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.5));
+}
+
+@layer utilities {
+  .bg-gradient-radial {
+    background-image: radial-gradient(circle at center,
+      var(--tw-gradient-from) 0%,
+      var(--tw-gradient-via) 50%,
+      var(--tw-gradient-to) 100%
+    );
+  }
+}
