@@ -204,7 +204,11 @@ const LandingPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
                 >
-                  <Link href="/chat" passHref>
+                  <a 
+                    href="https://wa.me/5511911357622?text=oi%20oque%20voce%20pode%20fazer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <motion.button
                       className={`
                       ${buttonStyles.base}
@@ -215,10 +219,10 @@ const LandingPage = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      Confira nossos eventos!
-                      <ArrowDown className="ml-2 w-4 h-4" />
+                      Fale com Dionísio!
+                      <WhatsApp className="ml-2 w-4 h-4" />
                     </motion.button>
-                  </Link>
+                  </a>
                 </motion.div>
               </div>
 
@@ -281,13 +285,17 @@ const LandingPage = () => {
                       Somos a Dionísio, uma startup de inteligência artificial que te ajuda a descobrir os melhores rolês, festas e eventos de acordo com o seu perfil e um simples questionário. Em Paralelo, nosso sistema de Gestão do Relacionamento com o Cliente (CRM) visa colocar o cliente como o principal foco dos processos de uma empresa, oferecendo uma plataforma simples que visa dinamizar a gestão e aumentar o engajamento com o público. Desse modo, acompanhar vendas, captar dados relevantes e identificar insights estratégicos fica fácil e intuitivo.
                     </p>
                     <div>
-                      <Link
-                        href="/chat"
-                        className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
-                      >
-                        Acessar Agora
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
+                      <div className="relative z-20">
+                        <Link
+                          href="http://dionisio-crm.web.app/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
+                        >
+                          Acessar Agora
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </div>
                     </div>
                   </div>
 
@@ -367,13 +375,17 @@ const LandingPage = () => {
                       Somos a Dionísio, uma startup de inteligência artificial que te ajuda a descobrir os melhores rolês, festas e eventos de acordo com o seu perfil e um simples questionário. Em Paralelo, nosso sistema de Gestão do Relacionamento com o Cliente (CRM) visa colocar o cliente como o principal foco dos processos de uma empresa, oferecendo uma plataforma simples que visa dinamizar a gestão e aumentar o engajamento com o público. Desse modo, acompanhar vendas, captar dados relevantes e identificar insights estratégicos fica fácil e intuitivo.
                     </p>
                     <div className="flex justify-end">
-                      <Link
-                        href="/chat"
-                        className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
-                      >
-                        Acessar Agora
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
+                      <div className="relative z-20">
+                        <Link
+                          href="http://dionisio-crm.web.app/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
+                        >
+                          Acessar Agora
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </div>
                     </div>
                   </div>
 
@@ -445,7 +457,7 @@ const LandingPage = () => {
             Quer saber mais sobre como o Dionísio pode transformar sua experiência com eventos e festas? Entre em contato conosco! Estamos prontos para ajudar você a encontrar os melhores rolês e criar momentos inesquecíveis.
           </p>
           <Link
-            href="#contact"
+            href="https://wa.me/5511977692831?text=Quero%20conhecer%20o%20CRM%20do%20Dionisio"
             className="px-8 py-3 text-[#f0bf5d] border border-[#f0bf5d] rounded-md transition-colors hover:bg-[#f0bf5d] hover:text-white mb-16"
           >
             Diga Olá

@@ -17,7 +17,7 @@ export const MainNav = () => {
             className="flex items-center"
           >
           
-            <h1 className="text-white text-2xl font-bold">Dionísio</h1>
+            <Image src={logo} alt="Dionísio" width={180} height={100} />
           </motion.div>
 
           <motion.div
@@ -26,15 +26,14 @@ export const MainNav = () => {
             transition={{ duration: 0.5 }}
             className="hidden md:flex items-center space-x-8"
           >
-            <Link href="/inicio">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-violet-900 hover:bg-purple-800 px-4 py-2 rounded-full text-white font-medium"
+              onClick={() => (window.location.href = 'http://dionisio-crm.web.app/')}
             >
               Entrar
             </motion.button>
-            </Link>
           </motion.div>
 
           <motion.button

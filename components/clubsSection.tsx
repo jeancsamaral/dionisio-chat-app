@@ -13,7 +13,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
-import { ArrowDown, Car } from "lucide-react";
+import { ArrowDown, Car, CalendarIcon } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { CarTaxiFront } from "lucide-react";
 
 interface Club {
   id: string;
@@ -56,6 +65,7 @@ interface BlogPost {
   author: string;
   image: string | StaticImageData;
   details: {
+    id?: string;
     musicalStyle: string;
     averagePrice: string;
     persona: string;
@@ -115,6 +125,7 @@ const dayTranslations: Record<string, string> = {
 };
 
 export default function ClubsSection() {
+  const [date, setDate] = useState<Date | undefined>();
   const [clubs, setClubs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -148,6 +159,7 @@ export default function ClubsSection() {
           author: club.address || "Local a confirmar",
           image: club.photo || club.image || placeholderClub,
           details: {
+            id: club.id,
             musicalStyle: club.musicalStyle || "",
             averagePrice: club.averagePrice || "",
             persona: club.persona || "",
@@ -232,18 +244,18 @@ export default function ClubsSection() {
               <>
                 <button
                   onClick={prevPage}
-                  className="absolute left-[-50px] top-[40%] z-10 p-2 rounded-full bg-purple-950/30 hover:bg-purple-900/50 transition-all opacity-50 hover:opacity-100"
+                  className="absolute left-0 lg:left-[-50px] top-[25%] lg:top-[40%] z-10 p-3 lg:p-2 rounded-full bg-purple-600/80 hover:bg-purple-500 transition-all lg:bg-purple-950/30 lg:hover:bg-purple-900/50"
                   aria-label="Previous page"
                 >
-                  <ChevronLeft className="h-6 w-6 text-purple-300" />
+                  <ChevronLeft className="h-8 w-8 lg:h-6 lg:w-6 text-white lg:text-purple-300" />
                 </button>
 
                 <button
                   onClick={nextPage}
-                  className="absolute right-[-50px] top-[40%] z-10 p-2 rounded-full bg-purple-950/30 hover:bg-purple-900/50 transition-all opacity-50 hover:opacity-100"
+                  className="absolute right-0 lg:right-[-50px] top-[25%] lg:top-[40%] z-10 p-3 lg:p-2 rounded-full bg-purple-600/80 hover:bg-purple-500 transition-all lg:bg-purple-950/30 lg:hover:bg-purple-900/50"
                   aria-label="Next page"
                 >
-                  <ChevronRight className="h-6 w-6 text-purple-300" />
+                  <ChevronRight className="h-8 w-8 lg:h-6 lg:w-6 text-white lg:text-purple-300" />
                 </button>
               </>
             )}
@@ -352,27 +364,149 @@ export default function ClubsSection() {
                   </div>
                 </div>
 
-                <div>
-                  <motion.div
-                    className="flex justify-start mt-4"
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-                  >
-                    {selectedClub.details.uberLink && (
-                      <Link href={selectedClub.details.uberLink} passHref>
-                        <motion.button
-                          className="py-2 px-6 rounded-full text-base bg-purple-800 hover:bg-purple-600 text-white flex items-center justify-center"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
+                {/* Formulário para adicionar à lista VIP */}
+                <Card className="bg-purple-950/30 border-purple-500/20 backdrop-blur-sm relative overflow-hidden">
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-900/50 via-purple-800/30 to-purple-900/50" />
+                  
+                  {/* Glow effects */}
+                  <div className="absolute -top-20 -left-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl" />
+                  <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl" />
+                  
+                  <CardHeader className="relative">
+                    <CardTitle className="text-2xl font-bold text-center text-white">
+                      <span className="bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300 text-transparent bg-clip-text">
+                        Adicionar à Lista VIP
+                      </span>
+                    </CardTitle>
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-6 relative">
+                    <form
+                      onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+                        e.preventDefault();
+                        
+                        try {
+                          const form = e.currentTarget as HTMLFormElement;
+                          const formData = new FormData(form);
+                          
+                          const name = formData.get("name");
+                          const listDate = formData.get("listDate");
+
+                          if (!name || !listDate) {
+                            throw new Error("Por favor, preencha todos os campos.");
+                          }
+
+                          if (!selectedClub?.details?.id) {
+                            throw new Error("ID do clube não encontrado.");
+                          }
+
+                          const requestBody = {
+                            clubId: selectedClub.details.id,
+                            name: name.toString(),
+                            listDate: listDate.toString(),
+                            userId: "user_001"
+                          };
+
+                          const response = await fetch(
+                            "https://addnametoviplist-nridlp6m4a-uc.a.run.app",
+                            {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify(requestBody)
+                            }
+                          );
+
+                          if (response.status === 404) {
+                            throw new Error("Clube não encontrado.");
+                          }
+
+                          if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(`Erro ao processar a solicitação: ${errorText}`);
+                          }
+
+                          const responseText = await response.text();
+                          try {
+                            const responseData = JSON.parse(responseText);
+                            alert(responseData.message);
+                          } catch (parseError) {
+                            alert(responseText);
+                          }
+                          
+                          form.reset();
+                        } catch (error) {
+                          console.error("Detailed error:", {
+                            error,
+                            type: error instanceof Error ? 'Error' : typeof error,
+                            message: error instanceof Error ? error.message : 'Unknown error'
+                          });
+
+                          if (error instanceof Error) {
+                            alert(error.message);
+                          } else {
+                            alert("Falha ao adicionar à lista VIP. Tente novamente.");
+                          }
+                        }
+                      }}
+                      className="space-y-6"
+                    >
+                      <div className="space-y-2">
+                        <Label htmlFor="name" className="text-purple-200 font-medium">
+                          Nome Completo
+                        </Label>
+                        <Input
+                          id="name"
+                          name="name"
+                          placeholder="Digite seu nome completo"
+                          className="bg-purple-900/40 border-purple-500/30 text-white placeholder:text-purple-300/50 focus:border-purple-400 focus:ring-purple-400/50 backdrop-blur-sm transition-all"
+                          required
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="listDate" className="text-purple-200 font-medium">
+                          Data do Evento
+                        </Label>
+                        <div className="relative">
+                          <Input
+                            type="date"
+                            id="listDate"
+                            name="listDate"
+                            required
+                            min={new Date().toISOString().split('T')[0]}
+                            className="bg-purple-900/40 border-purple-500/30 text-white focus:border-purple-400 focus:ring-purple-400/50 backdrop-blur-sm transition-all [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
+                          />
+                        </div>
+                      </div>
+
+                      <Button 
+                        type="submit"
+                        className="w-full bg-gradient-to-r from-purple-600 via-purple-500 to-purple-600 hover:from-purple-500 hover:via-purple-400 hover:to-purple-500 text-white font-semibold shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 animate-pulse-subtle"
+                      >
+                        Adicionar à Lista VIP
+                      </Button>
+
+                      {selectedClub.details.uberLink && (
+                        <Button 
+                          type="button"
+                          variant="outline" 
+                          className="w-full flex items-center justify-center gap-2 bg-purple-900/40 hover:bg-purple-800/50 border-purple-500/30 hover:border-purple-400/50 text-purple-200 transition-all duration-300"
+                          onClick={() => window.open(selectedClub.details.uberLink, '_blank')}
                         >
+                          <CarTaxiFront className="h-4 w-4" />
                           Uber
-                          <Car className="ml-2 w-4 h-4" />
-                        </motion.button>
-                      </Link>
-                    )}
-                  </motion.div>
-                </div>
+                        </Button>
+                      )}
+                    </form>
+
+                    {/* Decorative elements */}
+                    <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-purple-500/10 rounded-full blur-xl" />
+                    <div className="absolute -top-4 -left-4 w-24 h-24 bg-purple-500/10 rounded-full blur-xl" />
+                  </CardContent>
+                </Card>
 
                 <div className="flex justify-center pt-4">
                   {selectedClub.details.instagram && (
@@ -394,3 +528,18 @@ export default function ClubsSection() {
     </section>
   );
 }
+
+// Add this CSS to your global styles or component
+const pulseSubtle = {
+  '@keyframes pulse-subtle': {
+    '0%, 100%': {
+      opacity: 1,
+    },
+    '50%': {
+      opacity: 0.8,
+    },
+  },
+  '.animate-pulse-subtle': {
+    animation: 'pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+  },
+};

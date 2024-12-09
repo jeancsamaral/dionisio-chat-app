@@ -137,9 +137,11 @@ export function SponsorCarousel() {
                 </div>
 
                 {/* Call to action button */}
-                <div className="mt-12 text-center">
+                <div className="relative z-20 flex justify-center mt-12">
                     <Link
-                        href="#"
+                        href="https://wa.me/5511977692831?text=Quero%20conhecer%20o%20CRM%20do%20Dionisio"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
                     >
                         Seja um Parceiro
