@@ -204,7 +204,7 @@ const LandingPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
                 >
-                  <Link href="/#" passHref>
+                  <Link href="/chat" passHref>
                     <motion.button
                       className={`
                       ${buttonStyles.base}
@@ -282,7 +282,7 @@ const LandingPage = () => {
                     </p>
                     <div>
                       <Link
-                        href="#"
+                        href="/chat"
                         className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
                       >
                         Acessar Agora
@@ -368,7 +368,7 @@ const LandingPage = () => {
                     </p>
                     <div className="flex justify-end">
                       <Link
-                        href="#"
+                        href="/chat"
                         className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
                       >
                         Acessar Agora

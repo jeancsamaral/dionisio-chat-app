@@ -12,6 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { motion } from "framer-motion";
+import { ArrowDown, Car } from "lucide-react";
 
 interface Club {
   id: string;
@@ -19,7 +21,8 @@ interface Club {
   address: string;
   vipList: boolean;
   photo?: string;
-  imageUrl?: string;
+  image?: string;
+  uberLink?: string;
   description: string;
   musicalStyle: string;
   averagePrice: string;
@@ -76,6 +79,7 @@ interface BlogPost {
       friday?: string;
       // outros dias conforme necessário
     };
+    uberLink?: string;
   };
 }
 
@@ -99,6 +103,16 @@ function useScreenSize() {
 
   return isDesktop;
 }
+
+const dayTranslations: Record<string, string> = {
+  monday: "Segunda-feira",
+  tuesday: "Terça-feira",
+  wednesday: "Quarta-feira",
+  thursday: "Quinta-feira",
+  friday: "Sexta-feira",
+  saturday: "Sábado",
+  sunday: "Domingo"
+};
 
 export default function ClubsSection() {
   const [clubs, setClubs] = useState<BlogPost[]>([]);
@@ -132,7 +146,7 @@ export default function ClubsSection() {
           title: club.name,
           description: club.description || "Sem descrição disponível",
           author: club.address || "Local a confirmar",
-          image: club.photo || club.imageUrl || placeholderClub,
+          image: club.photo || club.image || placeholderClub,
           details: {
             musicalStyle: club.musicalStyle || "",
             averagePrice: club.averagePrice || "",
@@ -145,7 +159,8 @@ export default function ClubsSection() {
             userRatingTotal: club.userRatingTotal,
             vipListBenefits: club.vipListBenefits,
             vipListLink: club.vipListLink,
-            singers: club.singers
+            singers: club.singers,
+            uberLink: club.uberLink,
           }
         }));
 
@@ -238,7 +253,7 @@ export default function ClubsSection() {
                 <div
                   key={`${index}-${club.title}`}
                   onClick={() => handleClubClick(club)}
-                  className="w-[350px] group relative rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 ease-in-out hover:scale-105 bg-purple-950/30 rounded-3xl shadow-2xl backdrop-blur-sm cursor-pointer"
+                  className="w-[350px] h-[450px] group relative rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 ease-in-out hover:scale-105 bg-purple-950/30 rounded-3xl shadow-2xl backdrop-blur-sm cursor-pointer"
                 >
                   <div className="aspect-video overflow-hidden rounded-lg h-[200px]">
                     <Image
@@ -250,7 +265,7 @@ export default function ClubsSection() {
                       unoptimized={typeof club.image === 'string'}
                     />
                   </div>
-                  <div className="mt-4 px-3 pb-6 flex flex-col justify-between">
+                  <div className="mt-4 px-3 pb-6 flex flex-col h-[230px] overflow-hidden">
                     <div>
                       <h3 className="text-xl font-bold line-clamp-2">{club.title}</h3>
                       <p className="mt-2 text-zinc-400 line-clamp-2">{club.description}</p>
@@ -289,13 +304,13 @@ export default function ClubsSection() {
 
       {/* Modal com todas as informações */}
       <Dialog open={!!selectedClub} onOpenChange={() => setSelectedClub(null)}>
-        <DialogContent className="bg-purple-950/90 text-white max-w-2xl">
+        <DialogContent className="bg-purple-950/90 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold">{selectedClub?.title}</DialogTitle>
           </DialogHeader>
           
           {selectedClub && (
-            <div className="space-y-4">
+            <div className="space-y-4 pb-4">
               <div className="aspect-video relative overflow-hidden rounded-lg">
                 <Image
                   src={selectedClub.image}
@@ -329,7 +344,7 @@ export default function ClubsSection() {
                       {selectedClub.details.workingTime && 
                         Object.entries(selectedClub.details.workingTime).map(([day, time]) => (
                           <li key={day}>
-                            {day}: {time}
+                            {dayTranslations[day.toLowerCase()] || day}: {time}
                           </li>
                         ))
                       }
@@ -338,16 +353,25 @@ export default function ClubsSection() {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-purple-300">Lista VIP</h3>
-                  <ul className="space-y-2 text-gray-300">
-                    {selectedClub.details.vipListInfo && 
-                      Object.entries(selectedClub.details.vipListInfo).map(([day, info]) => (
-                        <li key={day}>
-                          {day}: {info}
-                        </li>
-                      ))
-                    }
-                  </ul>
+                  <motion.div
+                    className="flex justify-start mt-4"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+                  >
+                    {selectedClub.details.uberLink && (
+                      <Link href={selectedClub.details.uberLink} passHref>
+                        <motion.button
+                          className="py-2 px-6 rounded-full text-base bg-purple-800 hover:bg-purple-600 text-white flex items-center justify-center"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          Uber
+                          <Car className="ml-2 w-4 h-4" />
+                        </motion.button>
+                      </Link>
+                    )}
+                  </motion.div>
                 </div>
 
                 <div className="flex justify-center pt-4">
