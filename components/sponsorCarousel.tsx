@@ -134,7 +134,7 @@ export function SponsorCarousel() {
                     <div className="absolute right-0 top-0 bottom-0 w-32 z-10">
                         <div className="w-full h-full bg-gradient-to-l from-[#371161] via-purple-950/30 to-transparent" />
                     </div>
-                </div>
+                </div>1
 
                 {/* Call to action button */}
                 <div className="relative z-20 flex justify-center mt-12">

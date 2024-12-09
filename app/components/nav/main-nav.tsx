@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import logo from '@/assets/images/Dionisio.png'
+import { LogIn } from 'lucide-react';
 
 export const MainNav = () => {
   return (
@@ -42,7 +43,7 @@ export const MainNav = () => {
             transition={{ duration: 0.5 }}
             className="md:hidden"
           >
-            <Menu className="h-6 w-6" />
+            <LogIn onClick={() => (window.location.href = 'http://dionisio-crm.web.app/')} className="h-6 w-6" />
           </motion.button>
         </div>
       </div>

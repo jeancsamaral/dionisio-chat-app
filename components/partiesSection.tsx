@@ -167,18 +167,18 @@ export default function PartiesSection() {
               <>
                 <button
                   onClick={prevPage}
-                  className="absolute left-[-50px] top-[40%] z-10 p-2 rounded-full bg-purple-950/30 hover:bg-purple-900/50 transition-all opacity-50 hover:opacity-100"
+                  className="absolute left-0 lg:left-[-50px] top-[25%] lg:top-[40%] z-10 p-3 lg:p-2 rounded-full bg-purple-600/80 hover:bg-purple-500 transition-all lg:bg-purple-950/30 lg:hover:bg-purple-900/50"
                   aria-label="Previous page"
                 >
-                  <ChevronLeft className="h-6 w-6 text-purple-300" />
+                  <ChevronLeft className="h-8 w-8 lg:h-6 lg:w-6 text-white lg:text-purple-300" />
                 </button>
 
                 <button
                   onClick={nextPage}
-                  className="absolute right-[-50px] top-[40%] z-10 p-2 rounded-full bg-purple-950/30 hover:bg-purple-900/50 transition-all opacity-50 hover:opacity-100"
+                  className="absolute right-0 lg:right-[-50px] top-[25%] lg:top-[40%] z-10 p-3 lg:p-2 rounded-full bg-purple-600/80 hover:bg-purple-500 transition-all lg:bg-purple-950/30 lg:hover:bg-purple-900/50"
                   aria-label="Next page"
                 >
-                  <ChevronRight className="h-6 w-6 text-purple-300" />
+                  <ChevronRight className="h-8 w-8 lg:h-6 lg:w-6 text-white lg:text-purple-300" />
                 </button>
               </>
             )}
