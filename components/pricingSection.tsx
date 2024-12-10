@@ -13,7 +13,7 @@ interface PricingTabsProps {
 
 export function PricingTabs({ selectedDuration, onDurationChange }: PricingTabsProps) {
   return (
-    <Tabs defaultValue={selectedDuration.toString()} className="w-[400px] mx-auto mb-8 z-50">
+    <Tabs defaultValue={selectedDuration.toString()} className="w-full max-w-[400px] mx-auto mb-8 z-50">
       <TabsList className="grid w-full grid-cols-4 bg-white border">
         <TabsTrigger 
           value="1" 
@@ -132,20 +132,24 @@ export default function PricingSection() {
         <div className="grid gap-6 items-center">
           <div className="flex flex-col justify-center space-y-4 text-center">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Precificação Simples e Transparente</h2>
-              <p className="max-w-[900px] text-white md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mx-auto">
+              <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-5xl">Precificação Simples e Transparente</h2>
+              <p className="max-w-[900px] text-white text-sm md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mx-auto">
                 Escolha um dos Planos Exclusivos do CRM Dionísio
               </p>
             </div>
           </div>
           <PricingTabs selectedDuration={selectedDuration} onDurationChange={setSelectedDuration} />
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {plans.map((plan) => (
               <Card
                 key={plan.name}
-                className={`flex min-h-[450px] flex-col justify-around scale-105 ${
-                  plan.recommended ? "border-yellow-500 shadow-lg scale-105" : "opacity-50 scale-100 hover:opacity-80"
-                }`}
+                className={`flex min-h-[450px] flex-col justify-around 
+                  ${plan.recommended 
+                    ? "border-yellow-500 shadow-lg md:scale-105" 
+                    : "opacity-50 hover:opacity-80 md:scale-100"
+                  }
+                  ${plan.recommended ? "order-first md:order-none" : ""}
+                `}
               >
                 <CardHeader>
                   <CardTitle>{plan.name}</CardTitle>

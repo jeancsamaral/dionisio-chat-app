@@ -132,6 +132,7 @@ export default function ClubsSection() {
   const [currentPage, setCurrentPage] = useState(0);
   const isDesktop = useScreenSize();
   const [selectedClub, setSelectedClub] = useState<BlogPost | null>(null);
+  const [searchTerm, setSearchTerm] = useState(""); // Novo estado para o termo de pesquisa
 
   // Ajuste o ITEMS_PER_PAGE baseado no tamanho da tela
   const ITEMS_PER_PAGE = isDesktop ? 3 : 1;
@@ -180,7 +181,7 @@ export default function ClubsSection() {
         setError(null);
       } catch (error) {
         console.error("Error fetching clubs:", error);
-        setError("Não foi possível carregar os clubes. Tente novamente mais tarde.");
+        setError("Não foi possível carregar baladas. Tente novamente mais tarde.");
       } finally {
         setLoading(false);
       }
@@ -188,7 +189,11 @@ export default function ClubsSection() {
     fetchClubs();
   }, []);
 
-  const totalPages = Math.ceil(clubs.length / ITEMS_PER_PAGE);
+  const filteredClubs = clubs.filter((club) =>
+    club.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredClubs.length / ITEMS_PER_PAGE);
 
   const nextPage = () => {
     setCurrentPage((prev) => (prev + 1) % totalPages);
@@ -198,7 +203,7 @@ export default function ClubsSection() {
     setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
   };
 
-  const visibleClubs = clubs.slice(
+  const visibleClubs = filteredClubs.slice(
     currentPage * ITEMS_PER_PAGE,
     (currentPage + 1) * ITEMS_PER_PAGE
   );
@@ -220,27 +225,34 @@ export default function ClubsSection() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center">
           <div className="inline-flex items-center gap-2 rounded-lg bg-[#1a1a47] px-3 py-1 text-sm">
-            🎉 Confira os clubes disponíveis 🎉
+            🎉 Confira as Baladas disponíveis 🎉
           </div>
           <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-            Clubes com Lista VIP
+            Baladas com Lista VIP
           </h2>
           <p className="max-w-[900px] text-zinc-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            Explore os melhores clubes e aproveite suas noites ao máximo 🌟
+            Explore as melhores baladas e aproveite suas noites ao máximo 🌟
           </p>
+          <input
+            type="text"
+            placeholder="Pesquisar baladas..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="mt-4 p-2 rounded opacity-70 bg-purple-900/40 border-purple-500/30 text-white placeholder:text-purple-300/50 focus:border-purple-400 focus:ring-purple-400/50 backdrop-blur-sm transition-all"
+          />
         </div>
 
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
           </div>
-        ) : clubs.length === 0 ? (
+        ) : filteredClubs.length === 0 ? (
           <div className="text-center py-12 text-gray-400">
-            <p>Não há clubes disponíveis no momento.</p>
+            <p>Nenhum clube encontrado.</p>
           </div>
         ) : (
           <div className="relative mt-12">
-            {clubs.length > ITEMS_PER_PAGE && (
+            {filteredClubs.length > ITEMS_PER_PAGE && (
               <>
                 <button
                   onClick={prevPage}
@@ -294,7 +306,7 @@ export default function ClubsSection() {
               ))}
             </div>
 
-            {clubs.length > ITEMS_PER_PAGE && (
+            {filteredClubs.length > ITEMS_PER_PAGE && (
               <div className="flex justify-center gap-2 mt-8">
                 {Array.from({ length: totalPages }).map((_, index) => (
                   <button

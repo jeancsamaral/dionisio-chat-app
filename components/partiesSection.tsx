@@ -6,6 +6,14 @@ import { Loader2, ChevronLeft, ChevronRight, Instagram } from "lucide-react";
 import placeholderEvent from "@/assets/images/p2.png";
 import { StaticImageData } from "next/image";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface Party {
   id: string;
@@ -55,7 +63,13 @@ export default function PartiesSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
   const isDesktop = useScreenSize();
+  const [selectedParty, setSelectedParty] = useState<BlogPost | null>(null);
+  const [pixFormData, setPixFormData] = useState({
+    email: '',
+    quantity: 1,
+  });
 
   const ITEMS_PER_PAGE = isDesktop ? 3 : 1;
 
@@ -114,7 +128,11 @@ export default function PartiesSection() {
     fetchParties();
   }, []);
 
-  const totalPages = Math.ceil(blogs.length / ITEMS_PER_PAGE);
+  const filteredBlogs = blogs.filter((blog) =>
+    blog.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredBlogs.length / ITEMS_PER_PAGE);
 
   const nextPage = () => {
     setCurrentPage((prev) => (prev + 1) % totalPages);
@@ -124,7 +142,7 @@ export default function PartiesSection() {
     setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
   };
 
-  const visibleBlogs = blogs.slice(
+  const visibleBlogs = filteredBlogs.slice(
     currentPage * ITEMS_PER_PAGE,
     (currentPage + 1) * ITEMS_PER_PAGE
   );
@@ -150,20 +168,27 @@ export default function PartiesSection() {
           <p className="max-w-[900px] text-zinc-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
             Garanta seu ingresso e faça parte dos eventos mais épicos da cidade 🎉
           </p>
+          <input
+            type="text"
+            placeholder="Pesquisar festas..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="mt-4 p-2 rounded opacity-70 bg-purple-900/40 border-purple-500/30 text-white placeholder:text-purple-300/50 focus:border-purple-400 focus:ring-purple-400/50 backdrop-blur-sm transition-all"
+          />
         </div>
 
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
           </div>
-        ) : blogs.length === 0 ? (
+        ) : filteredBlogs.length === 0 ? (
           <div className="text-center py-12 text-gray-400">
-            <p>Não há festas disponíveis no momento.</p>
+            <p>Nenhuma festa encontrada.</p>
           </div>
         ) : (
           <div className="relative mt-12">
             {/* Setas laterais */}
-            {blogs.length > ITEMS_PER_PAGE && (
+            {filteredBlogs.length > ITEMS_PER_PAGE && (
               <>
                 <button
                   onClick={prevPage}
@@ -186,11 +211,10 @@ export default function PartiesSection() {
             {/* Grid de cards */}
             <div className="mx-auto grid max-w-7xl items-start gap-8 py-12 place-items-center grid-cols-1 lg:grid-cols-3 relative">
               {visibleBlogs.map((blog, index) => (
-                <Link
+                <div
                   key={`${index}-${blog.title}`}
-                  href={blog.link}
-                  target="_blank"
-                  className="w-[350px] group relative rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 ease-in-out hover:scale-105 bg-purple-950/30 rounded-3xl shadow-2xl backdrop-blur-sm"
+                  onClick={() => setSelectedParty(blog)}
+                  className="w-[350px] group relative rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 ease-in-out hover:scale-105 bg-purple-950/30 rounded-3xl shadow-2xl backdrop-blur-sm cursor-pointer"
                 >
                   <div className="aspect-video overflow-hidden rounded-lg h-[200px]">
                     <Image
@@ -255,12 +279,12 @@ export default function PartiesSection() {
                       </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
 
             {/* Dots abaixo dos cards */}
-            {blogs.length > ITEMS_PER_PAGE && (
+            {filteredBlogs.length > ITEMS_PER_PAGE && (
               <div className="flex justify-center gap-2 mt-8">
                 {Array.from({ length: totalPages }).map((_, index) => (
                   <button
@@ -279,6 +303,155 @@ export default function PartiesSection() {
           </div>
         )}
       </div>
+
+      {/* Dialog para exibir detalhes da festa */}
+      <Dialog open={!!selectedParty} onOpenChange={() => setSelectedParty(null)}>
+        <DialogContent className="bg-purple-950/90 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">
+              {selectedParty?.title}
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedParty && (
+            <div className="space-y-4 pb-4">
+              <div className="aspect-video relative overflow-hidden rounded-lg">
+                <Image
+                  src={selectedParty.image}
+                  alt={selectedParty.title}
+                  fill
+                  className="object-cover"
+                  unoptimized={typeof selectedParty.image === 'string'}
+                />
+              </div>
+
+              <div className="grid gap-4">
+                <div>
+                  <h3 className="font-semibold text-purple-300">Sobre</h3>
+                  <p className="text-gray-300">{selectedParty.description}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="font-semibold text-purple-300">Detalhes</h3>
+                    <ul className="space-y-2 text-gray-300">
+                      <li>📍 Local: {selectedParty.author}</li>
+                      <li>📅 Data: {selectedParty.date}</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-center gap-4 pt-4">
+                  {selectedParty.link && (
+                    <a
+                      href={selectedParty.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
+                    >
+                      Comprar Ingresso
+                    </a>
+                  )}
+                  
+                  {selectedParty.instagramLink && (
+                    <a
+                      href={selectedParty.instagramLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
+                    >
+                      <Instagram className="w-4 h-4 mr-2" />
+                      Seguir no Instagram
+                    </a>
+                  )}
+
+                  <div className="w-full space-y-4 mt-4">
+                    <div className="bg-purple-900/40 p-4 rounded-lg space-y-4">
+                      <h3 className="font-semibold text-lg text-center">Comprar com Pix</h3>
+                      <h6 className="text-sm text-center text-gray-200">Comprar sem taxa com Dionísio</h6>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={pixFormData.email}
+                          onChange={(e) => setPixFormData(prev => ({
+                            ...prev,
+                            email: e.target.value
+                          }))}
+                          className="bg-purple-900/40 border-purple-500/30 text-white"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="quantity">Quantidade de ingressos</Label>
+                        <Input
+                          id="quantity"
+                          type="number"
+                          min="1"
+                          value={pixFormData.quantity}
+                          onChange={(e) => setPixFormData(prev => ({
+                            ...prev,
+                            quantity: parseInt(e.target.value) || 1
+                          }))}
+                          className="bg-purple-900/40 border-purple-500/30 text-white"
+                        />
+                      </div>
+
+                      <div className="text-sm text-purple-200 space-y-1">
+                        <p>Valor unitário: R$ 100,00</p>
+                        <p>Total: R$ {(pixFormData.quantity * 100).toFixed(2)}</p>
+                      </div>
+
+                      <button
+                        onClick={async () => {
+                          if (!pixFormData.email) {
+                            alert("Por favor, preencha seu email.");
+                            return;
+                          }
+
+                          try {
+                            const response = await fetch("https://setefipixkeyhttp-nridlp6m4a-uc.a.run.app", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({
+                                party: selectedParty.title,
+                                quantity: pixFormData.quantity,
+                                email: pixFormData.email,
+                                ticketType: "Standard",
+                                userId: "user_123",
+                                value: (pixFormData.quantity * 100).toFixed(2),
+                                partyId: "party_456",
+                              }),
+                            });
+
+                            if (!response.ok) {
+                              throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+
+                            const data = await response.json();
+                            alert("Chave Pix gerada com sucesso! Verifique seu email para mais detalhes.");
+                            setPixFormData({ email: '', quantity: 1 }); // Reset form
+                          } catch (error) {
+                            console.error("Error generating Pix key:", error);
+                            alert("Falha ao gerar chave Pix. Tente novamente mais tarde.");
+                          }
+                        }}
+                        className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 px-4 rounded-full transition-colors"
+                      >
+                        Gerar Chave Pix
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

@@ -11,7 +11,7 @@ import { StarsBackground } from '@/app/components/stars-background'
 import { ArrowDown, Bot } from 'lucide-react'
 import image from "@/assets/images/david2.png"
 import image2 from "@/assets/images/sobre.png"
-import image3 from "@/assets/images/dg.png"
+import image3 from "@/assets/images/replace.png"
 import { Check } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -266,10 +266,10 @@ const LandingPage = () => {
                 />
               </div>
             </div>
-                      
-            {<PartiesSectionTeste />}
+      
 
-            {<MovingClubsSection />}
+            <PartiesSection />
+            <ClubsSection />
             
             {/*<ClubsSection />}*/}
 
@@ -338,72 +338,6 @@ const LandingPage = () => {
             <FeaturesSection />
 
             <SponsorCarousel />
-
-            
-
-            <section className="relative w-full overflow-hidden mt-[70px]">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-transparent" />
-              
-              <div className="container relative mx-auto p-6 sm:p-8 lg:p-12 bg-purple-950/30 rounded-3xl shadow-2xl backdrop-blur-sm">
-                <div className="absolute inset-0 rounded-3xl border border-purple-500/20" />
-                <div className="grid gap-8 lg:gap-16 lg:grid-cols-2 items-center">
-                <div className="relative lg:block">
-                    <div className="relative mx-auto lg:mx-0 max-w-[400px]">
-                      {[1, 2, 3, 4].map((i) => (
-                        <div
-                          key={i}
-                          className="absolute rounded-full border border-purple-500/20"
-                          style={{
-                            width: `${i * 120}px`,
-                            height: `${i * 120}px`,
-                            top: `${-i * 60}px`,
-                            left: `${-i * 60}px`,
-                            opacity: 1 - i * 0.2,
-                          }}
-                        />
-                      ))}
-                      <div className="relative z-10 rounded-full bg-purple-600/20 p-4 backdrop-blur-sm">
-                        <Image
-                          src={image3}
-                          alt="Sobre o CRM"
-                          className="w-full h-auto rounded-full relative z-10"
-                          priority
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  {/* Conteúdo textual */}
-                  <div className="flex flex-col justify-center space-y-6 text-right">
-                    <div className="inline-flex items-center self-end rounded-full bg-purple-950/60 px-4 py-2 text-sm text-purple-200 backdrop-blur-sm">
-                      <span className="mr-2">😎</span>
-                      Afinal, o que é o CRM Dionísio?
-                    </div>
-                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-                      Conexão única e impactante.
-                    </h1>
-                    <p className="text-sm sm:text-base text-gray-300">
-                      Somos a Dionísio, uma startup de inteligência artificial que te ajuda a descobrir os melhores rolês, festas e eventos de acordo com o seu perfil e um simples questionário. Em Paralelo, nosso sistema de Gestão do Relacionamento com o Cliente (CRM) visa colocar o cliente como o principal foco dos processos de uma empresa, oferecendo uma plataforma simples que visa dinamizar a gestão e aumentar o engajamento com o público. Desse modo, acompanhar vendas, captar dados relevantes e identificar insights estratégicos fica fácil e intuitivo.
-                    </p>
-                    <div className="flex justify-end">
-                      <div className="relative z-20">
-                        <Link
-                          href="http://dionisio-crm.web.app/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-500 transition-colors"
-                        >
-                          Acessar Agora
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Imagem e círculos */}
-                  
-                </div>
-              </div>
-            </section>
 
             <PricingSection />
           </motion.div>
