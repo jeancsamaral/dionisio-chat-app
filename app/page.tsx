@@ -27,6 +27,9 @@ import { Facebook, Github, Linkedin, Youtube, PhoneIcon as WhatsApp } from 'luci
 import PartiesSection from '@/components/partiesSection'
 import ClubsSection from '@/components/clubsSection'
 import PricingSection from '@/components/pricingSection'
+import FeaturesSection from '@/components/featuresSection'
+import PartiesSectionTeste from '@/components/movingPartiesSection'
+import MovingClubsSection from '@/components/movingClubsSection'
 
 const plans = [
   {
@@ -263,8 +266,11 @@ const LandingPage = () => {
                 />
               </div>
             </div>
+                      
+            {<PartiesSectionTeste />}
 
-            {<PartiesSection />}
+            {<MovingClubsSection />}
+            
             {<ClubsSection />}
 
             <section className="relative w-full overflow-hidden mt-[70px]">
@@ -329,7 +335,11 @@ const LandingPage = () => {
               </div>
             </section>
 
+            <FeaturesSection />
+
             <SponsorCarousel />
+
+            
 
             <section className="relative w-full overflow-hidden mt-[70px]">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-transparent" />
