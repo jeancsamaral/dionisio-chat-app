@@ -13,7 +13,7 @@ const fontSans = FontSans({
 
 export const metadata: Metadata = {
   title: "Dionísio",
-  description: "A medalha já é sua",
+  description: "Explore festas e eventos no seu estilo",
   icons: {
     icon: '/assets/images/logoazul.png',
   }
