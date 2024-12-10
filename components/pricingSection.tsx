@@ -50,8 +50,8 @@ export function PricingTabs({ selectedDuration, onDurationChange }: PricingTabsP
 
 const allFeatures = [
   "Cardápio Digital",
-  "IA atendente",
-  "CRM Controle de Clientes"
+  "CRM Controle de Clientes",
+  "IA atendente"
 ]
 
 const basePlans = [
@@ -85,8 +85,8 @@ const basePlans = [
     description: "",
     features: [
       "Cardápio Digital",
-      "IA atendente",
-      "CRM Controle de Clientes"
+      "CRM Controle de Clientes",
+      "IA atendente"
     ],
     recommended: true,
     paymentLinks: {
