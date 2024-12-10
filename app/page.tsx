@@ -26,7 +26,7 @@ import { SponsorCarousel } from '@/components/sponsorCarousel'
 import { Facebook, Github, Linkedin, Youtube, PhoneIcon as WhatsApp } from 'lucide-react'
 import PartiesSection from '@/components/partiesSection'
 import ClubsSection from '@/components/clubsSection'
-
+import PricingSection from '@/components/pricingSection'
 
 const plans = [
   {
@@ -394,57 +394,8 @@ const LandingPage = () => {
                 </div>
               </div>
             </section>
-            
-            <section className="w-full py-12">
-              <div className="container px-4 md:px-6">
-                <div className="grid gap-6 items-center">
-                  <div className="flex flex-col justify-center space-y-4 text-center">
-                    <div className="space-y-2">
-                      <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Precificação Simples e Trasparente</h2>
-                      <p className="max-w-[900px] text-white md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mx-auto">
-                        Escolha um dos Planos Exclusivos do CRM Dionísio
-                      </p>
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-                    {plans.map((plan) => (
-                      <Card
-                        key={plan.name}
-                        className={`flex min-h-[450px] flex-col justify-around scale-105 ${plan.recommended ? "border-yellow-500 shadow-lg scale-105" : "opacity-50 scale-100 hover:opacity-80"
-                          }`}
-                      >
-                        <CardHeader>
-                          <CardTitle>{plan.name}</CardTitle>
-                          <CardDescription>{plan.description}</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="text-4xl font-bold mb-4">
-                            {plan.price}
-                            {plan.name !== "Enterprise" && <span className="text-lg font-normal">/month</span>}
-                          </div>
-                          <ul className="space-y-2 mb-4">
-                            {plan.features.map((feature) => (
-                              <li key={feature} className="flex items-center">
-                                <Check className="mr-2 h-4 w-4 text-yellow-600" />
-                                <span>{feature}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </CardContent>
-                        <CardFooter>
-                          <Button className="w-full" onClick={() => window.open(plan.paymentLink, '_blank')} variant={plan.recommended ? "default" : "outline"}>
-                            {plan.name === "Premium" ? "Assinar Agora" : "Assinar Agora"}
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </section>
 
-            
-
+            <PricingSection />
           </motion.div>
         </header>
       </div>
