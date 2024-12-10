@@ -107,7 +107,7 @@ const basePlans = [
     description: "",
     features: [
       "Cardápio Digital",
-      "IA atendente"
+      "CRM Controle de Clientes"
     ],
     paymentLinks: {
       1: "https://buy.stripe.com/7sI9CE8mYaMOamk28c",
