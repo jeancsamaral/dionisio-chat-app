@@ -23,7 +23,6 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CarTaxiFront } from "lucide-react";
-
 interface Club {
   id: string;
   name: string;
@@ -123,6 +122,25 @@ const dayTranslations: Record<string, string> = {
   saturday: "Sábado",
   sunday: "Domingo"
 };
+
+function getWeekDates() {
+  const today = new Date();
+  const sunday = new Date(today);
+  sunday.setDate(today.getDate() - today.getDay()); // Volta para o domingo da semana atual
+  
+  const weekDates = [];
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(sunday);
+    date.setDate(sunday.getDate() + i);
+    weekDates.push(date);
+  }
+  return weekDates;
+}
+
+function isDateAllowed(date: Date, workingTime: Record<string, string>) {
+  const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+  return workingTime[dayOfWeek] !== undefined && workingTime[dayOfWeek] !== "";
+}
 
 export default function ClubsSection() {
   const [date, setDate] = useState<Date | undefined>();
@@ -483,14 +501,47 @@ export default function ClubsSection() {
                           Data do Evento
                         </Label>
                         <div className="relative">
-                          <Input
-                            type="date"
+                          <select
                             id="listDate"
                             name="listDate"
                             required
-                            min={new Date().toISOString().split('T')[0]}
-                            className="bg-purple-900/40 border-purple-500/30 text-white focus:border-purple-400 focus:ring-purple-400/50 backdrop-blur-sm transition-all [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
-                          />
+                            className="w-full bg-purple-900/40 border-purple-500/30 text-white placeholder:text-purple-300/50 
+                            focus:border-purple-400 focus:ring-purple-400/50 backdrop-blur-sm transition-all rounded-lg
+                            px-3 py-2 appearance-none hover:bg-purple-800/30
+                            bg-gradient-to-r from-purple-900/40 via-purple-800/30 to-purple-900/40
+                            shadow-inner shadow-purple-950/50"
+                            defaultValue=""
+                            style={{
+                              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a78bfa'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                              backgroundPosition: 'right 0.5rem center',
+                              backgroundRepeat: 'no-repeat',
+                              backgroundSize: '1.5em 1.5em',
+                            }}
+                          >
+                            <option value="" disabled className="bg-purple-900 text-purple-200">
+                              Selecione uma data
+                            </option>
+                            {getWeekDates().map(date => {
+                              const isAvailable = selectedClub.details.workingTime && 
+                                isDateAllowed(date, selectedClub.details.workingTime);
+                              
+                              if (!isAvailable) return null;
+
+                              const dayName = date.toLocaleDateString('pt-BR', { weekday: 'long' });
+                              const formattedDate = date.toLocaleDateString('pt-BR');
+                              const value = date.toISOString().split('T')[0];
+
+                              return (
+                                <option 
+                                  key={value} 
+                                  value={value}
+                                  className="bg-purple-900 text-purple-200"
+                                >
+                                  {`${dayName} - ${formattedDate}`}
+                                </option>
+                              );
+                            })}
+                          </select>
                         </div>
                       </div>
 

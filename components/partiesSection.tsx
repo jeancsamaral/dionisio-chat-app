@@ -68,8 +68,11 @@ export default function PartiesSection() {
   const [selectedParty, setSelectedParty] = useState<BlogPost | null>(null);
   const [pixFormData, setPixFormData] = useState({
     email: '',
+    phone: '',
     quantity: 1,
   });
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [pixKey, setPixKey] = useState<string | null>(null);
 
   const ITEMS_PER_PAGE = isDesktop ? 3 : 1;
 
@@ -101,7 +104,7 @@ export default function PartiesSection() {
             });
           }
 
-          const description = party.description || 
+          const description = party.description ||
             `${party.party} em ${party.address}. ${party.emission === "ingresse" ? "Ingressos disponíveis!" : ""}`;
 
           return {
@@ -115,7 +118,7 @@ export default function PartiesSection() {
             instagramLink: party.instagramLink,
           };
         });
-        
+
         setBlogs(formattedData);
         setError(null);
       } catch (error) {
@@ -256,9 +259,9 @@ export default function PartiesSection() {
                           stroke="currentColor"
                           viewBox="0 0 24 24"
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                             d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                             d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                         <span className="line-clamp-1">{blog.author}</span>
@@ -290,11 +293,10 @@ export default function PartiesSection() {
                   <button
                     key={index}
                     onClick={() => setCurrentPage(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      currentPage === index 
-                        ? "bg-purple-500 w-4" 
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${currentPage === index
+                        ? "bg-purple-500 w-4"
                         : "bg-purple-300/30 hover:bg-purple-400/50"
-                    }`}
+                      }`}
                     aria-label={`Go to page ${index + 1}`}
                   />
                 ))}
@@ -352,7 +354,7 @@ export default function PartiesSection() {
                       Comprar Ingresso
                     </a>
                   )}
-                  
+
                   {selectedParty.instagramLink && (
                     <a
                       href={selectedParty.instagramLink}
@@ -369,81 +371,159 @@ export default function PartiesSection() {
                     <div className="bg-purple-900/40 p-4 rounded-lg space-y-4">
                       <h3 className="font-semibold text-lg text-center">Comprar com Pix</h3>
                       <h6 className="text-sm text-center text-gray-200">Comprar sem taxa com Dionísio</h6>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={pixFormData.email}
-                          onChange={(e) => setPixFormData(prev => ({
-                            ...prev,
-                            email: e.target.value
-                          }))}
-                          className="bg-purple-900/40 border-purple-500/30 text-white"
-                        />
-                      </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="quantity">Quantidade de ingressos</Label>
-                        <Input
-                          id="quantity"
-                          type="number"
-                          min="1"
-                          value={pixFormData.quantity}
-                          onChange={(e) => setPixFormData(prev => ({
-                            ...prev,
-                            quantity: parseInt(e.target.value) || 1
-                          }))}
-                          className="bg-purple-900/40 border-purple-500/30 text-white"
-                        />
-                      </div>
+                      {!pixKey ? (
+                        // Form fields when no Pix key is generated
+                        <>
+                          <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                              id="email"
+                              type="email"
+                              value={pixFormData.email}
+                              placeholder="seuemail@exemplo.com"
+                              onChange={(e) => setPixFormData(prev => ({
+                                ...prev,
+                                email: e.target.value
+                              }))}
+                              className="bg-purple-900/40 border-purple-500/30 text-white"
+                            />
 
-                      <div className="text-sm text-purple-200 space-y-1">
-                        <p>Valor unitário: R$ 100,00</p>
-                        <p>Total: R$ {(pixFormData.quantity * 100).toFixed(2)}</p>
-                      </div>
+                            <Label htmlFor="phone">Celular</Label>
+                            <Input
+                              id="phone"
+                              type="tel"
+                              value={pixFormData.phone}
+                              onChange={(e) => setPixFormData(prev => ({
+                                ...prev,
+                                phone: e.target.value
+                              }))}
+                              placeholder="(00) 00000-0000"
+                              className="bg-purple-900/40 border-purple-500/30 text-white"
+                            />
+                          </div>
 
-                      <button
-                        onClick={async () => {
-                          if (!pixFormData.email) {
-                            alert("Por favor, preencha seu email.");
-                            return;
-                          }
+                          <div className="space-y-2">
+                            <Label htmlFor="quantity">Quantidade de ingressos</Label>
+                            <Input
+                              id="quantity"
+                              type="number"
+                              min="1"
+                              value={pixFormData.quantity}
+                              onChange={(e) => setPixFormData(prev => ({
+                                ...prev,
+                                quantity: parseInt(e.target.value) || 1
+                              }))}
+                              className="bg-purple-900/40 border-purple-500/30 text-white"
+                            />
+                          </div>
 
-                          try {
-                            const response = await fetch("https://setefipixkeyhttp-nridlp6m4a-uc.a.run.app", {
-                              method: "POST",
-                              headers: {
-                                "Content-Type": "application/json",
-                              },
-                              body: JSON.stringify({
-                                party: selectedParty.title,
-                                quantity: pixFormData.quantity,
-                                email: pixFormData.email,
-                                ticketType: "Standard",
-                                userId: "user_123",
-                                value: (pixFormData.quantity * 100).toFixed(2),
-                                partyId: "party_456",
-                              }),
-                            });
+                          <div className="text-sm text-purple-200 space-y-1">
+                            <p>Valor unitário: R$ 100,00</p>
+                            <p>Total: R$ {(pixFormData.quantity * 100).toFixed(2)}</p>
+                          </div>
 
-                            if (!response.ok) {
-                              throw new Error(`HTTP error! status: ${response.status}`);
-                            }
+                          <button
+                            onClick={async () => {
+                              if (!pixFormData.email) {
+                                alert("Por favor, preencha seu email.");
+                                return;
+                              }
 
-                            const data = await response.json();
-                            alert("Chave Pix gerada com sucesso! Verifique seu email para mais detalhes.");
-                            setPixFormData({ email: '', quantity: 1 }); // Reset form
-                          } catch (error) {
-                            console.error("Error generating Pix key:", error);
-                            alert("Falha ao gerar chave Pix. Tente novamente mais tarde.");
-                          }
-                        }}
-                        className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 px-4 rounded-full transition-colors"
-                      >
-                        Gerar Chave Pix
-                      </button>
+                              setIsProcessing(true);
+                              setPixKey(null);
+
+                              try {
+                                const response = await fetch("https://setefipixkeyhttp-nridlp6m4a-uc.a.run.app", {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                  },
+                                  body: JSON.stringify({
+                                    party: selectedParty.title,
+                                    quantity: pixFormData.quantity,
+                                    email: pixFormData.email,
+                                    ticketType: "Standard",
+                                    userId: pixFormData.phone,
+                                    value: (pixFormData.quantity * 100).toFixed(2),
+                                    partyId: "party_456",
+                                  }),
+                                });
+
+                                if (!response.ok) {
+                                  throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+
+                                const data = await response.json();
+                                console.log('API Response:', data);
+                                
+                                setPixKey(data.pixCopy);
+                                alert("Chave Pix gerada com sucesso!");
+                              } catch (error) {
+                                console.error("Error generating Pix key:", error);
+                                alert("Falha ao gerar chave Pix. Tente novamente mais tarde.");
+                              } finally {
+                                setIsProcessing(false);
+                              }
+                            }}
+                            disabled={isProcessing}
+                            className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 px-4 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {isProcessing ? (
+                              <div className="flex items-center justify-center gap-2">
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Gerando Chave Pix...
+                              </div>
+                            ) : (
+                              "Gerar Chave Pix"
+                            )}
+                          </button>
+                        </>
+                      ) : (
+                        // Show only Pix key field after generation
+                        <div className="space-y-4">
+                          <div className="text-center mb-4">
+                            <h3 className="text-lg font-semibold text-green-500">Chave Pix Gerada com Sucesso!</h3>
+                            <p className="text-sm text-purple-300">Copie a chave abaixo e realize o pagamento</p>
+                          </div>
+                          
+                          <div className="bg-purple-900/40 p-4 rounded-lg space-y-2">
+                            <Label>Chave Pix:</Label>
+                            <div className="flex gap-2">
+                              <Input
+                                value={pixKey}
+                                readOnly
+                                className="bg-purple-900/40 border-purple-500/30 text-white"
+                              />
+                              <Button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(pixKey);
+                                  alert("Chave Pix copiada!");
+                                }}
+                                className="whitespace-nowrap"
+                              >
+                                Copiar
+                              </Button>
+                            </div>
+                          </div>
+
+                          <div className="text-sm text-purple-200 space-y-1">
+                            <p>Quantidade: {pixFormData.quantity} ingresso(s)</p>
+                            <p>Total a pagar: R$ {(pixFormData.quantity * 100).toFixed(2)}</p>
+                          </div>
+
+                          <Button
+                            onClick={() => {
+                              setPixKey(null);
+                              setPixFormData({ email: '', phone: '', quantity: 1 });
+                            }}
+                            variant="outline"
+                            className="w-full mt-4"
+                          >
+                            Gerar Nova Chave
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

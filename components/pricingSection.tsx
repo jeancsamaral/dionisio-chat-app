@@ -75,7 +75,7 @@ const basePlans = [
     }
   },
   {
-    name: "Premium",
+    name: "Platinum",
     prices: {
       1: 482,    // 1 mês: R$ 159,00
       3: 1302,    // 3 meses: R$ 399,00
@@ -97,7 +97,7 @@ const basePlans = [
     }
   },
   {
-    name: "Platinum",
+    name: "Premium",
     prices: {
       1: 151,    // 1 mês: R$ 199,00
       3: 408,    // 3 meses: R$ 499,00
@@ -159,13 +159,23 @@ export default function PricingSection() {
                   <div className="text-4xl font-bold mb-4">
                     {selectedDuration > 1 && (
                       <div className="text-lg line-through opacity-70 text-purple-900">
-                        R$ {(plan.prices[1] * selectedDuration).toFixed(0)}
+                        R$ {plan.prices[1].toFixed(0)}/mês
                       </div>
                     )}
-                    R$ {plan.price.toFixed(0)}
-                    <span className="text-lg font-normal">
-                      /{selectedDuration === 1 ? 'mês' : `${selectedDuration} meses`}
-                    </span>
+                    R$ {(plan.price / selectedDuration).toFixed(0)}
+                    <span className="text-lg font-normal">/mês</span>
+                    
+                    {selectedDuration > 1 && (
+                      <div className="text-sm text-green-500 font-normal">
+                        Economia de {(((plan.prices[1] * selectedDuration) - plan.price) / selectedDuration).toFixed(0)}/mês
+                      </div>
+                    )}
+                    
+                    {selectedDuration > 1 && (
+                      <div className="text-base mt-2 text-gray-400 font-normal">
+                        Total de R$ {plan.price.toFixed(0)}
+                      </div>
+                    )}
                   </div>
                   <ul className="space-y-2 mb-4">
                     {allFeatures.map((feature) => (
@@ -188,7 +198,7 @@ export default function PricingSection() {
                     onClick={() => window.open(plan.paymentLinks[selectedDuration as keyof typeof plan.paymentLinks], '_blank')} 
                     variant={plan.recommended ? "default" : "outline"}
                   >
-                    {plan.name === "Premium" ? "Assinar Agora" : "Assinar Agora"}
+                    {plan.name === "Platinum" ? "Assinar Agora" : "Assinar Agora"}
                   </Button>
                 </CardFooter>
               </Card>
